@@ -70,7 +70,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
         """.stripIndent()
 
@@ -96,7 +96,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "build.gradle") << """
             plugins {
                 id('java')
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
             
             license {
@@ -139,7 +139,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "build.gradle") << """
             plugins {
                 id('java')
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
             
             license {
@@ -181,7 +181,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "build.gradle") << """
             plugins {
                 id('java')
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
             
             license {
@@ -234,7 +234,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "build.gradle") << """
             plugins {
                 id('java')
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
             
             license {
@@ -286,7 +286,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
         """.stripIndent()
 
@@ -310,7 +310,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
                 id('java')
             }
             sourceSets {
@@ -339,7 +339,7 @@ class LicenserPluginFunctionalTest extends Specification {
         def sourceFile = new File(sourcesDir, "source.c") << "TEST"
         new File(projectDir, "build.gradle") << """
             plugins {
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
             
             license {
@@ -383,7 +383,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
         """.stripIndent()
 
@@ -422,7 +422,7 @@ class LicenserPluginFunctionalTest extends Specification {
             }
 
             plugins {
-                id('org.cadixdev.licenser')
+                id('net.neoforged.licenser')
             }
             apply plugin: 'com.android.application'
             
@@ -463,7 +463,7 @@ class LicenserPluginFunctionalTest extends Specification {
         new File(projectDir, "build.gradle.kts") << """
             plugins {
                 java
-                id("org.cadixdev.licenser")
+                id("net.neoforged.licenser")
             }
             
             license {

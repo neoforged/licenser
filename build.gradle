@@ -1,17 +1,16 @@
 plugins {
     id 'java-gradle-plugin'
     id 'groovy'
-
-    id 'com.gradle.plugin-publish' version '0.14.0'
-
+    id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.5.1'
+    id 'net.neoforged.gradleutils' version '[2.0.18,)'
 }
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
-group = 'org.cadixdev.gradle'
-version = '0.7.0-SNAPSHOT'
+group = 'net.neoforged.licenser'
+version = gradleutils.getTagOffsetVersion()
 description = 'A simple license header manager for Gradle'
 
 repositories {
@@ -72,22 +71,66 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
 gradlePlugin {
     plugins {
         licenserPlugin {
-            id = 'org.cadixdev.licenser'
+            id = 'net.neoforged.licenser'
             implementationClass = 'org.cadixdev.gradle.licenser.Licenser'
         }
     }
 }
 
-pluginBundle {
-    website = 'https://www.cadixdev.org/'
-    vcsUrl = 'https://github.com/CadixDev/licenser'
-    description = project.description
-    tags = ['license']
-
-    plugins {
-        licenserPlugin {
-            id = 'org.cadixdev.licenser'
-            displayName = 'licenser'
+publishing {
+    publications {
+        pluginMaven(MavenPublication) { mavenPublication ->
+            pom {
+                name = 'Licenser'
+                description = 'A simple license header manager for Gradle, originally from CadixDev'
+                url = 'https://github.com/neoforged/licenser'
+                scm {
+                    url = 'https://github.com/neoforged/licenser'
+                    connection = 'https://github.com/neoforged/licenser.git'
+                    developerConnection = 'scm:git:git@github.com:NeoForged/licenser.git'
+                }
+                issueManagement {
+                    system = 'github'
+                    url = 'https://github.com/neoforged/licenser/issues'
+                }
+                organization {
+                    name = 'NeoForged'
+                    url = 'https://github.com/neoforged'
+                }
+                licenses {
+                    license {
+                        name = 'MIT'
+                        url = file("LICENSE").getAbsolutePath()
+                    }
+                }
+            }
         }
     }
+    repositories {
+        maven {
+            name 'forge'
+            if (System.env.MAVEN_USER && System.env.MAVEN_PASSWORD) {
+                def publishingEndpoint = System.env.MAVEN_URL_RELEASE ?: 'https://maven.neoforged.net/releases'
+
+                if (project.version.toString().endsWith("-SNAPSHOT") && System.env.MAVEN_URL_SNAPSHOTS) {
+                    url System.env.MAVEN_URL_SNAPSHOTS
+                } else {
+                    url publishingEndpoint
+                }
+                authentication {
+                    basic(BasicAuthentication)
+                }
+                credentials {
+                    username = System.env.MAVEN_USER
+                    password = System.env.MAVEN_PASSWORD
+                }
+            } else {
+                url 'repo'
+            }
+        }
+    }
+}
+
+changelog {
+    fromTag '0.7'
 }

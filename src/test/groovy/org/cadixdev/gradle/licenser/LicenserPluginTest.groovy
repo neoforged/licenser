@@ -33,7 +33,7 @@ class LicenserPluginTest extends Specification {
         def project = ProjectBuilder.builder().build()
 
         when:
-        project.plugins.apply("org.cadixdev.licenser")
+        project.plugins.apply("net.neoforged.licenser")
 
         then:
         ["licenseCheck", "licenseFormat", "checkLicenses", "updateLicenses"].each {
