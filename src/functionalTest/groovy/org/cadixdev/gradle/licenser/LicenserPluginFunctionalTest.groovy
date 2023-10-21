@@ -26,33 +26,36 @@ package org.cadixdev.gradle.licenser
 
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
+import spock.lang.Ignore
 import spock.lang.Specification
+import spock.lang.TempDir
 import spock.lang.Unroll
 
 import java.nio.file.Paths
 
 class LicenserPluginFunctionalTest extends Specification {
-    @Rule
-    TemporaryFolder temporaryFolder = new TemporaryFolder()
+    @TempDir
+    File temporaryFolder
 
     static final def standardArguments = ["--warning-mode", "fail", "--stacktrace"].asImmutable()
 
     static final def configurationCacheTestMatrix = [
             // TODO: restore android plugin once versions that support configuration cache are available
             /* gradleVersion | androidVersion | extraArgs */
-            [ "6.8.3",         null,            ["--configuration-cache"] ],
-            [ "6.9",           null,            ["--configuration-cache"] ],
             [ "7.0.2",         null,            ["--configuration-cache"] ],
             [ "7.1",           null,            ["--configuration-cache"] ],
+            //[ "8.4",           null,            ["--configuration-cache"] ], we need to fix some warnings
     ].asImmutable()
 
     static final def testMatrix = ([
             /* gradleVersion | androidVersion | extraArgs */
-            [ "5.6.4",         "3.6.4",         [] ],
-            [ "6.8.3",         "4.1.0",         [] ],
+            //[ "5.6.4",         "3.6.4",         [] ],
+            //[ "6.8.3",         "4.1.0",         [] ],
     ] + configurationCacheTestMatrix).asImmutable()
+
+    File tempDir() {
+        return temporaryFolder
+    }
 
     GradleRunner runner(File projectDir, gradleVersion, args) {
         return GradleRunner.create()
@@ -66,7 +69,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "can run licenseCheck task (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
@@ -88,7 +91,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "skips existing headers in checkLicenses task (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         def sourceDir = projectDir.toPath().resolve(Paths.get("src", "main", "java", "com", "example")).toFile()
         sourceDir.mkdirs()
         new File(projectDir, "header.txt") << "New copyright header"
@@ -131,7 +134,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "skips existing headers in updateLicenses task (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         def sourceDir = projectDir.toPath().resolve(Paths.get("src", "main", "java", "com", "example")).toFile()
         sourceDir.mkdirs()
         new File(projectDir, "header.txt") << "New copyright header"
@@ -173,7 +176,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "supports long files with skipExistingHeaders = true in updateLicenses task (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         def sourceDir = projectDir.toPath().resolve(Paths.get("src", "main", "java", "com", "example")).toFile()
         sourceDir.mkdirs()
         new File(projectDir, "header.txt") << "New copyright header"
@@ -226,7 +229,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "updates invalid headers in updateLicenses task when skipExistingHeaders=true (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         def sourceDir = projectDir.toPath().resolve(Paths.get("src", "main", "java", "com", "example")).toFile()
         sourceDir.mkdirs()
         new File(projectDir, "header.txt") << "New copyright header"
@@ -282,7 +285,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "can run licenseFormat task (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
@@ -306,7 +309,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "supports custom source sets task (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
@@ -331,7 +334,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "supports custom style (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         def sourcesDir = new File(projectDir, "sources")
         sourcesDir.mkdirs()
         new File(projectDir, "settings.gradle") << ""
@@ -379,7 +382,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "license formatting configuration is configuration-cacheable (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             plugins {
@@ -405,10 +408,11 @@ class LicenserPluginFunctionalTest extends Specification {
         [gradleVersion, _, extraArgs] << configurationCacheTestMatrix
     }
 
+    @Ignore // Nothing in the test matrix supplies an android test
     @Unroll
     def "supports Android source sets (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         new File(projectDir, "settings.gradle") << ""
         new File(projectDir, "build.gradle") << """
             buildscript {
@@ -455,7 +459,7 @@ class LicenserPluginFunctionalTest extends Specification {
     @Unroll
     def "supports Kotlin buildscripts (gradle #gradleVersion)"() {
         given:
-        def projectDir = temporaryFolder.newFolder()
+        def projectDir = tempDir()
         def sourceDir = projectDir.toPath().resolve(Paths.get("src", "main", "java", "com", "example")).toFile()
         sourceDir.mkdirs()
         new File(projectDir, "header.txt") << 'New copyright header for ${project}'

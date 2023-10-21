@@ -6,8 +6,11 @@ plugins {
     id 'net.neoforged.gradleutils' version '[2.0.18,)'
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
 
 group = 'net.neoforged.licenser'
 version = gradleutils.getTagOffsetVersion()
@@ -29,6 +32,8 @@ configurations {
 gradlePlugin.testSourceSets(sourceSets.functionalTest)
 
 tasks.register('functionalTest', Test) {
+    useJUnitPlatform()
+
     description = 'Runs the functional tests.'
     group = 'verification'
 
@@ -41,12 +46,12 @@ tasks.register('functionalTest', Test) {
 dependencies {
     implementation gradleApi()
 
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
     functionalTestImplementation gradleTestKit()
 }
 
 test {
-    useJUnit()
+    useJUnitPlatform()
 }
 
 tasks.named('check') {
