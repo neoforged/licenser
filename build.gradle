@@ -4,7 +4,7 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.5.1'
-    id 'net.neoforged.gradleutils' version '[2.0.18,3)'
+    id 'net.neoforged.gradleutils' version '3.0.0-alpha.10'
 }
 
 java {
@@ -14,7 +14,13 @@ java {
 }
 
 group = 'net.neoforged.licenser'
-version = gradleutils.getTagOffsetVersion()
+gradleutils {
+    version {
+        branches.suffixBranch()
+    }
+    setupSigning(signAllPublications: true)
+}
+println "Version: ${version = gradleutils.version}"
 description = 'A simple license header manager for Gradle'
 
 repositories {
@@ -137,15 +143,7 @@ publishing {
     }
 }
 
-if (System.getenv('GPG_PRIVATE_KEY')) {
-    signing {
-        final signingKey = System.getenv('GPG_PRIVATE_KEY') ?: ''
-        final signingPassword = System.getenv('GPG_KEY_PASSWORD') ?: ''
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign publishing.publications.pluginMaven
-    }
-}
-
 changelog {
-    fromTag '0.7'
+    from '0.7'
+    disableAutomaticPublicationRegistration()
 }
