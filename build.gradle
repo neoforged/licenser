@@ -9,7 +9,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(8))
     }
 }
 
@@ -48,6 +48,11 @@ tasks.register('functionalTest', Test) {
     classpath = sourceSets.functionalTest.runtimeClasspath
 
     mustRunAfter test
+
+    // Gradle 8.10 wants to run on 17
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 dependencies {

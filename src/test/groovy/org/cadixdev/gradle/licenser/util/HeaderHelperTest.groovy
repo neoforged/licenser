@@ -61,8 +61,8 @@ class HeaderHelperTest extends Specification {
             /*
              * Some copyright header
              */
-            My Content\
-        """.stripIndent()
+            My Content
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -80,7 +80,7 @@ class HeaderHelperTest extends Specification {
              * Some copyright header
              */
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -97,7 +97,7 @@ class HeaderHelperTest extends Specification {
             /*
              */
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -114,7 +114,7 @@ class HeaderHelperTest extends Specification {
             /*
              * Incomplete copyright header
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -131,7 +131,7 @@ class HeaderHelperTest extends Specification {
             #!/bin/bash
             # Some header
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -151,7 +151,7 @@ class HeaderHelperTest extends Specification {
             -->
             <document>
             </document>
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 

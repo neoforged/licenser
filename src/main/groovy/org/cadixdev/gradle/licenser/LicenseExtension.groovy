@@ -38,7 +38,6 @@ import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.resources.TextResourceFactory
 import org.gradle.api.tasks.util.PatternFilterable
 import org.gradle.api.tasks.util.PatternSet
-import org.gradle.util.ConfigureUtil
 
 import javax.inject.Inject
 
@@ -128,14 +127,7 @@ class LicenseExtension extends LicenseProperties {
         this.skipExistingHeaders = objects.property(Boolean).convention(false)
         this.charset.convention('UTF-8')
 
-        def defaultLineEnding
-        try {
-            // Gradle 6+
-            defaultLineEnding = project.providers.systemProperty("line.separator")
-        } catch (final MissingMethodException ex) {
-            // Gradle 5.x TODO @ 0.7: remove this
-            defaultLineEnding = project.provider { System.lineSeparator() }
-        }
+        def defaultLineEnding = project.providers.systemProperty("line.separator")
         this.lineEnding = objects.property(String).convention(defaultLineEnding)
         this.newLine.convention(true)
 
@@ -203,21 +195,11 @@ class LicenseExtension extends LicenseProperties {
     /**
      * Adds a new conditional license header that will be applied to all matching files.
      *
-     * @param args A map definition of the pattern, similar to {@link Project#fileTree(Map)}
-     * @param closure The closure that configures the license header
-     */
-    void matching(Map<String, ?> args, @DelegatesTo(LicenseProperties) Closure closure) {
-        matching(ConfigureUtil.configureByMap(args, new PatternSet()), closure)
-    }
-
-    /**
-     * Adds a new conditional license header that will be applied to all matching files.
-     *
      * @param patternClosure A closure that configures the {@link PatternFilterable}
      * @param configureClosure The closure that configures the license header
      */
     void matching(@DelegatesTo(PatternFilterable) Closure patternClosure, @DelegatesTo(LicenseProperties) Closure configureClosure) {
-        matching(ConfigureUtil.configure(patternClosure, new PatternSet()), configureClosure)
+        matching(new PatternSet().with(patternClosure), configureClosure)
     }
 
     /**
@@ -227,7 +209,7 @@ class LicenseExtension extends LicenseProperties {
      * @param closure The closure that configures the license header
      */
     void matching(PatternSet pattern, @DelegatesTo(LicenseProperties) Closure closure) {
-        conditionalProperties.add(ConfigureUtil.configure(closure, new LicenseProperties(pattern, this.objects, this.textResources, this.charset)))
+        conditionalProperties.add(new LicenseProperties(pattern, this.objects, this.textResources, this.charset).with(closure))
     }
 
     /**
