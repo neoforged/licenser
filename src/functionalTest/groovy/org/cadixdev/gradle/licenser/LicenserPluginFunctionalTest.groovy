@@ -39,19 +39,10 @@ class LicenserPluginFunctionalTest extends Specification {
 
     static final def standardArguments = ["--warning-mode", "fail", "--stacktrace"].asImmutable()
 
-    static final def configurationCacheTestMatrix = [
-            // TODO: restore android plugin once versions that support configuration cache are available
+    static final def testMatrix = [
             /* gradleVersion | androidVersion | extraArgs */
-            [ "7.0.2",         null,            ["--configuration-cache"] ],
-            [ "7.1",           null,            ["--configuration-cache"] ],
-            //[ "8.4",           null,            ["--configuration-cache"] ], we need to fix some warnings
+            [ "8.10.2",           null,            ["--configuration-cache"] ],
     ].asImmutable()
-
-    static final def testMatrix = ([
-            /* gradleVersion | androidVersion | extraArgs */
-            //[ "5.6.4",         "3.6.4",         [] ],
-            //[ "6.8.3",         "4.1.0",         [] ],
-    ] + configurationCacheTestMatrix).asImmutable()
 
     File tempDir() {
         return temporaryFolder

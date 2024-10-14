@@ -40,7 +40,6 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.util.PatternSet
 import org.gradle.language.base.plugins.LifecycleBasePlugin
-import org.gradle.util.ConfigureUtil
 
 class Licenser implements Plugin<Project> {
 
@@ -222,7 +221,7 @@ class Licenser implements Plugin<Project> {
             task.charset.set(charset)
             task.skipExistingHeaders.set(skipExisting)
             if (target != null) {
-                ConfigureUtil.configure(target, task)
+                task.configure(target)
             }
         }
     }
