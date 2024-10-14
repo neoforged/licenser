@@ -4,7 +4,7 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.5.1'
-    id 'net.neoforged.gradleutils' version '3.0.0-alpha.10'
+    id 'net.neoforged.gradleutils' version '3.0.0'
 }
 
 java {
@@ -48,6 +48,11 @@ tasks.register('functionalTest', Test) {
     classpath = sourceSets.functionalTest.runtimeClasspath
 
     mustRunAfter test
+
+    // Gradle 8.10 wants to run on 17
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 dependencies {

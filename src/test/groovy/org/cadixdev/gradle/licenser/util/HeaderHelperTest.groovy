@@ -62,7 +62,7 @@ class HeaderHelperTest extends Specification {
              * Some copyright header
              */
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -75,12 +75,12 @@ class HeaderHelperTest extends Specification {
 
     def "contentStartsWithValidHeaderFormat returns false with invalid non-empty header"() {
         given:
-        def inputString = """\
+        def inputString = """
             /**
              * Some copyright header
              */
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -93,11 +93,11 @@ class HeaderHelperTest extends Specification {
 
     def "contentStartsWithValidHeaderFormat returns true with valid empty header"() {
         given:
-        def inputString = """\
+        def inputString = """
             /*
              */
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -110,11 +110,11 @@ class HeaderHelperTest extends Specification {
 
     def "contentStartsWithValidHeaderFormat returns false with incomplete header"() {
         given:
-        def inputString = """\
+        def inputString = """
             /*
              * Incomplete copyright header
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -127,11 +127,11 @@ class HeaderHelperTest extends Specification {
 
     def "contentStartsWithValidHeaderFormat returns true with valid header with ignored lines"() {
         given:
-        def inputString = """\
+        def inputString = """
             #!/bin/bash
             # Some header
             My Content
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 
@@ -151,7 +151,7 @@ class HeaderHelperTest extends Specification {
             -->
             <document>
             </document>
-        """.stripIndent()
+        """.stripIndent(true)
         def stringReader = new StringReader(inputString)
         def reader = new BufferedReader(stringReader)
 

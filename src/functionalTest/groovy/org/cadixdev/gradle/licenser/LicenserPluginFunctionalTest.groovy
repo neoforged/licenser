@@ -39,19 +39,10 @@ class LicenserPluginFunctionalTest extends Specification {
 
     static final def standardArguments = ["--warning-mode", "fail", "--stacktrace"].asImmutable()
 
-    static final def configurationCacheTestMatrix = [
-            // TODO: restore android plugin once versions that support configuration cache are available
+    static final def testMatrix = [
             /* gradleVersion | androidVersion | extraArgs */
-            [ "7.0.2",         null,            ["--configuration-cache"] ],
-            [ "7.1",           null,            ["--configuration-cache"] ],
-            //[ "8.4",           null,            ["--configuration-cache"] ], we need to fix some warnings
+            [ "8.10.2",           null,            ["--configuration-cache"] ],
     ].asImmutable()
-
-    static final def testMatrix = ([
-            /* gradleVersion | androidVersion | extraArgs */
-            //[ "5.6.4",         "3.6.4",         [] ],
-            //[ "6.8.3",         "4.1.0",         [] ],
-    ] + configurationCacheTestMatrix).asImmutable()
 
     File tempDir() {
         return temporaryFolder
@@ -75,7 +66,7 @@ class LicenserPluginFunctionalTest extends Specification {
             plugins {
                 id('net.neoforged.licenser')
             }
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         def result = runner(projectDir, gradleVersion, extraArgs + "licenseCheck").build()
@@ -107,7 +98,7 @@ class LicenserPluginFunctionalTest extends Specification {
                 header = project.file('header.txt')
                 skipExistingHeaders = true
             }
-        """.stripIndent()
+        """.stripIndent(true)
         new File(sourceDir, "MyClass.java") << """
             /*
              * Existing copyright header
@@ -116,7 +107,7 @@ class LicenserPluginFunctionalTest extends Specification {
             package com.example;
             
             class MyClass {}
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         // Run twice to make sure that we can read the configuration cache
@@ -150,7 +141,7 @@ class LicenserPluginFunctionalTest extends Specification {
                 header = project.file('header.txt')
                 skipExistingHeaders = true
             }
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFileContent = """\
             /*
              * Existing copyright header
@@ -159,7 +150,7 @@ class LicenserPluginFunctionalTest extends Specification {
             package com.example;
             
             class MyClass {}
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFile = new File(sourceDir, "MyClass.java") << sourceFileContent
 
         when:
@@ -192,12 +183,12 @@ class LicenserPluginFunctionalTest extends Specification {
                 header = project.file('header.txt')
                 skipExistingHeaders = true
             }
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFileBuilder = new StringBuilder("""\
             package com.example;
             
             class MyClass {
-        """.stripIndent())
+        """.stripIndent(true))
         // Add a lot of fields to make the file long
         for (int i = 0; i < 1000; i++) {
             sourceFileBuilder += "    private int field"
@@ -213,7 +204,7 @@ class LicenserPluginFunctionalTest extends Specification {
              * New copyright header
              */
             
-        """.stripIndent() + sourceFileContent
+        """.stripIndent(true) + sourceFileContent
 
         when:
         def result = runner(projectDir, gradleVersion, extraArgs + "updateLicenses").build()
@@ -245,7 +236,7 @@ class LicenserPluginFunctionalTest extends Specification {
                 header = project.file('header.txt')
                 skipExistingHeaders = true
             }
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFileContent = """\
             //
             // Existing copyright header
@@ -254,7 +245,7 @@ class LicenserPluginFunctionalTest extends Specification {
             package com.example;
             
             class MyClass {}
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFile = new File(sourceDir, "MyClass.java") << sourceFileContent
 
         when:
@@ -276,7 +267,7 @@ class LicenserPluginFunctionalTest extends Specification {
             package com.example;
             
             class MyClass {}
-        """.stripIndent()
+        """.stripIndent(true)
 
         where:
         [gradleVersion, _, extraArgs] << testMatrix
@@ -291,7 +282,7 @@ class LicenserPluginFunctionalTest extends Specification {
             plugins {
                 id('net.neoforged.licenser')
             }
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         def result = runner(projectDir, gradleVersion, extraArgs + "licenseFormat").build()
@@ -319,7 +310,7 @@ class LicenserPluginFunctionalTest extends Specification {
             sourceSets {
                 mySourceSet {}
             }
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         def result = runner(projectDir, gradleVersion, extraArgs + "licenseCheck").build()
@@ -359,7 +350,7 @@ class LicenserPluginFunctionalTest extends Specification {
                     }
                 }
             }
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         def runner = runner(projectDir, gradleVersion, extraArgs + "updateLicenses")
@@ -373,7 +364,7 @@ class LicenserPluginFunctionalTest extends Specification {
              * Copyright header
              */
             TEST
-            """.stripIndent()
+            """.stripIndent(true)
 
         where:
         [gradleVersion, _, extraArgs] << testMatrix
@@ -388,7 +379,7 @@ class LicenserPluginFunctionalTest extends Specification {
             plugins {
                 id('net.neoforged.licenser')
             }
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         def result = runner(projectDir, gradleVersion, extraArgs + "licenseFormat").build()
@@ -405,7 +396,7 @@ class LicenserPluginFunctionalTest extends Specification {
 
 
         where:
-        [gradleVersion, _, extraArgs] << configurationCacheTestMatrix
+        [gradleVersion, _, extraArgs] << testMatrix
     }
 
     @Ignore // Nothing in the test matrix supplies an android test
@@ -442,7 +433,7 @@ class LicenserPluginFunctionalTest extends Specification {
                     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
                 }
             }
-        """.stripIndent()
+        """.stripIndent(true)
 
         when:
         def result = runner(projectDir, gradleVersion, extraArgs + "licenseCheck").build()
@@ -477,12 +468,12 @@ class LicenserPluginFunctionalTest extends Specification {
                     this["project"] = "AirhornPowered"
                 }
             }
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFileContent = """\
             package com.example;
             
             class MyClass {}
-        """.stripIndent()
+        """.stripIndent(true)
         def sourceFile = new File(sourceDir, "MyClass.java") << sourceFileContent
 
         when:
@@ -500,7 +491,7 @@ class LicenserPluginFunctionalTest extends Specification {
             package com.example;
             
             class MyClass {}
-        """.stripIndent()
+        """.stripIndent(true)
 
         where:
         [gradleVersion, _, extraArgs] << testMatrix

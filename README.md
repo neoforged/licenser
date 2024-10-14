@@ -13,9 +13,11 @@ For a simple project you only need to apply the licenser plugin to your project:
 
 ```gradle
 plugins {
-    id 'org.cadixdev.licenser' version '0.6.1'
+    id 'net.neoforged.licenser' version '0.7.0'
 }
 ```
+
+You can find [available versions](https://projects.neoforged.net/neoforged/licenser) at the NeoForged projects listing.
 
 This will apply the `LICENSE` file found in the project directory to all common source file types known to licenser.
 
